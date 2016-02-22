@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Score()
+comment0.text=\n\ Create\ the\ score\ image\ in\ the\ constructor\n
+comment1.params=
+comment1.target=void\ draw()
+comment1.text=\n\ Draw\ the\ score\ on\ the\ image\n
+comment2.params=
+comment2.target=void\ increase()
+comment2.text=\n\ Increase\ the\ score\ by\ one\n
+numComments=3
