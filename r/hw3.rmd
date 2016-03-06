@@ -1,0 +1,81 @@
+---
+title: "FINA 4414 Home Work 3"
+author: Tushar Jain
+output:
+  html_document:
+    toc: false
+    theme: united
+  pdf_document:
+    toc: false
+    highlight: zenburn
+---
+
+```{r setup}
+# set global chunk options: images will be 7x5 inches
+knitr::opts_chunk$set(fig.width=7, fig.height=5)
+options(digits = 4)
+```
+
+##Answer 1
+
+```{r}
+aba <- read.csv("abalone.csv",header=TRUE)
+myBy <- function(aDataFrame, aListOfFactors, aFunction) {
+  x <- split(aDataFrame, aListOfFactors)
+  lapply(x, aFunction)
+}
+myBy(aba, aba$Gender, function(m) lm(m[,2]~m[,3]))
+```
+
+##Answer 2
+
+```{r}
+myAggregate <- function(aDataFrame, aListOfFactors, aFunction) {
+    x <- split(aDataFrame, aListOfFactors)
+    t(sapply(x, lapply, median))
+}
+myAggregate(aba[,-1],list(aba$Gender),median)
+```
+
+##Answer 3
+
+```{r}
+library(backtest)
+data(starmine)
+star <- starmine[ starmine$date == "1995-01-31",]
+star$cap <- star$cap.usd/1e9
+aBinVector <- c(0, 2, 10, max(star$cap, na.rm=TRUE)) # two bins
+star$capCategory <- cut(star$cap, aBinVector, labels=c("smallCap", "midCap", "largeCap"))
+tapply(star$ret.0.1.m, star$capCategory, mean, na.rm=TRUE)
+```
+
+##Answer 4
+
+```{r}
+star$pe <- star$cap.usd/star$net.income
+quantile(star$pe, probs = seq(0, 1, length = 4 + 1), na.rm = TRUE)
+# THREE PE Values: values that correspond to 25%, 50% and 75%
+```
+
+```{r}
+star$pe <- star$cap.usd/star$net.income
+quantile(star$pe, probs = seq(0, 1, length = 4 + 1), na.rm = TRUE)
+# THREE PE Values: values that correspond to 25%, 50% and 75%
+```
+
+```{r}
+star$peBin <- cut(star$pe, quantile(star$pe, probs = seq(0, 1, length = 4 + 1), na.rm = TRUE), labels=c("Bin1", "Bin2", "Bin3", "Bin4"))
+tapply(star$pe, star$peBin, mean, na.rm=TRUE)
+```
+
+```{r}
+tapply(star$symbol, star$peBin, length)
+```
+
+```{r}
+aggregate(star[, c("ret.0.1.m", "cap.usd")],list(star$peBin),mean,na.rm=TRUE)
+```
+
+```{r}
+tapply(star$ret.0.1.m, list(star$peBin, star$capCategory), mean, na.rm=TRUE)
+```
